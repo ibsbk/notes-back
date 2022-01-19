@@ -14,12 +14,19 @@ namespace WebApplication7.Controllers
         [HttpGet("get_notes")]
         public async Task<ActionResult<Note>> Get_Notes(Note request)
         {
-            var notes = db.notes.Where(x => x.user_id == request.user_id).ToList();
-            if (notes.Any())
+            try
             {
-                return Ok(notes);
+                var notes = db.notes.Where(x => x.user_id == request.user_id).ToList();
+                if (notes.Any())
+                {
+                    return Ok(notes);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-            else
+            catch
             {
                 return BadRequest();
             }
@@ -40,6 +47,69 @@ namespace WebApplication7.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPatch("edit_note")]
+        public async Task<ActionResult<Note>> Edit_Note(Note request)
+        {
+            try
+            {
+                var note = db.notes.Find(request.id);
+                if(request.user_id == note.user_id)
+                {
+                    try
+                    {
+                        note.note = request.note;
+                        note.notification_time = request.notification_time.ToUniversalTime();
+                        db.SaveChanges();
+                        return Ok(note);
+                    }
+                    catch
+                    {
+                        return BadRequest();
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpDelete("delete_note")]
+        public async Task<ActionResult<Note>> Delete_Note(Note request)
+        {
+            try
+            {
+                var note = db.notes.Find(request.id);
+                if (request.user_id == note.user_id)
+                {
+                    try
+                    {
+                        db.notes.Remove(note);
+                        db.SaveChanges();
+                        return Ok(note);
+                    }
+                    catch
+                    {
+                        return BadRequest();
+                    }
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
         }
     }
 }
