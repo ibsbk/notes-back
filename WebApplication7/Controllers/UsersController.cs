@@ -27,17 +27,17 @@ namespace WebApplication7.Controllers
             }
 }
 
-        [HttpGet("get_all_users")]
-        public async Task<ActionResult<Note>> All_Users(User request)
-        {
-            var users = db.users.OrderBy(x => x.id);
-            return Ok(users);
-        }
+//        [HttpGet("get_all_users")]
+//        public async Task<ActionResult<Note>> All_Users(User request)
+//        {
+//           var users = db.users.All();
+//            return Ok(users);
+//        }
 
-        [HttpGet("get_user")]
-        public async Task<ActionResult<Note>> Get_User(User request)
+        [HttpGet("get_user/{google_id}")]
+        public async Task<ActionResult<Note>> Get_User(string google_id)
         {
-            var users = db.users.Where(x => x.id == request.id).ToList();
+            var users = db.users.Where(x => x.google_id == google_id).ToList();
             if (users.Any())
             {
                 return Ok(users);

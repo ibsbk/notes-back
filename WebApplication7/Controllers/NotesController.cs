@@ -36,7 +36,7 @@ namespace WebApplication7.Controllers
         [HttpPut("add_note")]
         public async Task<ActionResult<Note>> Add_Note(Note request)
         {
-            Note new_note = new Note() { note = request.note, notification_time = request.notification_time.ToUniversalTime(), user_id = request.user_id};
+            Note new_note = new Note() { note = request.note, created_at = request.created_at.ToUniversalTime(), user_id = request.user_id};
             try
             {
                 db.notes.Add(new_note);
@@ -60,7 +60,7 @@ namespace WebApplication7.Controllers
                     try
                     {
                         note.note = request.note;
-                        note.notification_time = request.notification_time.ToUniversalTime();
+                        note.created_at = request.created_at.ToUniversalTime();
                         db.SaveChanges();
                         return Ok(note);
                     }
